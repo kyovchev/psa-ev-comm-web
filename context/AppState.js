@@ -7,15 +7,16 @@ import firebase_app from "@/firebase/config";
 const AppContext = createContext();
 
 export default function AppWrapper({ children }) {
-  const database = getFirestore(firebase_app);
   const auth = getAuth(firebase_app);
+  const database = getFirestore(firebase_app);
+
   const [user, setUser] = useState(null);
 
   return (
     <AppContext.Provider
       value={{
-        database,
         auth,
+        database,
         user,
         setUser,
       }}

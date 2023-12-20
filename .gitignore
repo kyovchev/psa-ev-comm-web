@@ -34,3 +34,4 @@ yarn-error.log*
 .env
 .nvmrc
 firebase.json
+public/firebase-messaging-sw.js

@@ -6,6 +6,8 @@ import { useAppContext } from "@/context/AppState";
 
 import { formatPosixTimestamp, formatStringTimestamp } from "../utils/utils";
 
+import { setFcmToken } from "@/firebase/setFcmToken";
+
 import styles from "@/styles/CarStatus.module.css";
 
 export default function CarStatus() {
@@ -26,6 +28,8 @@ export default function CarStatus() {
     },
   });
 
+  const [notifications, setNotifications] = useState(false);
+
   async function logout() {
     let result = null,
       error = null;
@@ -38,14 +42,30 @@ export default function CarStatus() {
     setUser(null);
     return { result, error };
   }
-  console.log(user);
+
+  async function subscribe() {
+    if ("Notification" in window) {
+      if (Notification.permission === "granted") {
+        setFcmToken(user.uid);
+      } else if (Notification.permission !== "denied") {
+        Notification.requestPermission().then((permission) => {
+          if (permission === "granted") {
+            subscribe();
+          }
+        });
+      }
+    }
+  }
 
   useEffect(() => {
+    if ("Notification" in window) {
+      setNotifications(true);
+    }
+
     const unsub = onSnapshot(
       doc(database, "car_status", "current"),
       (snapshot) => {
         if (snapshot.exists()) {
-          console.log("Document data:", snapshot.data());
           setCarStatus(snapshot.data());
         } else {
           console.log("No data available");
@@ -54,7 +74,6 @@ export default function CarStatus() {
     );
 
     return () => {
-      console.log(unsub);
       unsub();
     };
   }, [database]);
@@ -75,6 +94,17 @@ export default function CarStatus() {
         <p></p>
         <p>Обновено на {formatPosixTimestamp(carStatus.timestamp)}</p>
         <p>
+          {notifications && (
+            <>
+              <button
+                onClick={(e) => {
+                  subscribe();
+                }}
+              >
+                Включи известия
+              </button>
+            </>
+          )}
           <button
             onClick={(e) => {
               logout();
