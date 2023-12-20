@@ -17,20 +17,7 @@ import styles from "@/styles/CarStatus.module.css";
 export default function CarStatus() {
   const { database, auth, user, setUser } = useAppContext();
 
-  const [carStatus, setCarStatus] = useState({
-    odometer: "-",
-    ignition: "-",
-    timestamp: "-",
-    environment: {
-      air_temp: "-",
-      day: "-",
-    },
-    battery: {
-      level: "-",
-      updated_at: "-",
-      charging_mode: "-",
-    },
-  });
+  const [carStatus, setCarStatus] = useState(null);
 
   const [notifications, setNotifications] = useState(false);
 
@@ -85,7 +72,7 @@ export default function CarStatus() {
   return (
     <div className={styles.carStatusContainerBackground}>
       <div className={styles.carStatusContainer}>
-        {carStatus !== undefined && (
+        {carStatus !== null && (
           <>
             <p>
               Батерия: {carStatus.battery.level}% (
@@ -93,27 +80,41 @@ export default function CarStatus() {
             </p>
             <p>Прогноза: {carStatus.battery.autonomy} км</p>
             <p>Километраж: {carStatus.odometer} км</p>
+            <p>
+              Позиция:{" "}
+              <a
+                href={
+                  "https://maps.google.com/maps?q=" +
+                  carStatus.position.latitude +
+                  "," +
+                  carStatus.position.longitude
+                }
+                target="_blank"
+              >
+                Google Maps
+              </a>{" "}
+              ({formatStringTimestamp(carStatus.position.updated_at)})
+            </p>
             <p>Температура на въздуха: {carStatus.environment.air_temp}&deg;</p>
             <p>Навън е: {carStatus.environment.day ? "светло" : "тъмно"}</p>
             <p>Състояние на движение: {carStatus.ignition}</p>
-            {carStatus.battery.charging !== undefined &&
-              carStatus.battery.charging.plugged !== undefined && (
-                <>
-                  <p>
-                    Състояние на зареждане: {carStatus.battery.charging.status}
-                  </p>
-                  <p>
-                    Оставащо време:{" "}
-                    {formatDurationString(
-                      carStatus.battery.charging.remaining_time
-                    )}
-                  </p>
-                  <p>
-                    Скорост на зареждане: {carStatus.battery.charging.rate} км/ч
-                  </p>
-                  <p>Режим на зареждане: {carStatus.battery.charging.mode}</p>
-                </>
-              )}
+            {carStatus.battery.charging.plugged && (
+              <>
+                <p>
+                  Състояние на зареждане: {carStatus.battery.charging.status}
+                </p>
+                <p>
+                  Оставащо време:{" "}
+                  {formatDurationString(
+                    carStatus.battery.charging.remaining_time
+                  )}
+                </p>
+                <p>
+                  Скорост на зареждане: {carStatus.battery.charging.rate} км/ч
+                </p>
+                <p>Режим на зареждане: {carStatus.battery.charging.mode}</p>
+              </>
+            )}
             <p>&nbsp;</p>
             <p>Обновено на {formatPosixTimestamp(carStatus.timestamp)}</p>
           </>
