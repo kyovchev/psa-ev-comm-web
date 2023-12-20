@@ -13,3 +13,8 @@ export function formatStringTimestamp(timestamp) {
   );
   return dt.setLocale("bg").toLocaleString(DateTime.DATETIME_SHORT);
 }
+
+export function formatDurationString(duration) {
+  const dt = duration.substring(2, duration.length - 1).split("H");
+  return dt[0] + " часа и " + dt[1] + " минути";
+}

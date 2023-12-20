@@ -4,7 +4,11 @@ import { doc, onSnapshot } from "firebase/firestore";
 
 import { useAppContext } from "@/context/AppState";
 
-import { formatPosixTimestamp, formatStringTimestamp } from "../utils/utils";
+import {
+  formatPosixTimestamp,
+  formatStringTimestamp,
+  formatDurationString,
+} from "../utils/utils";
 
 import { setFcmToken } from "@/firebase/setFcmToken";
 
@@ -81,18 +85,39 @@ export default function CarStatus() {
   return (
     <div className={styles.carStatusContainerBackground}>
       <div className={styles.carStatusContainer}>
-        <p>
-          Батерия: {carStatus.battery.level}% (
-          {formatStringTimestamp(carStatus.battery.updated_at)})
-        </p>
-        <p>Прогноза: {carStatus.battery.autonomy} км</p>
-        <p>Километраж: {carStatus.odometer} км</p>
-        <p>Температура на въздуха: {carStatus.environment.air_temp}&deg;</p>
-        <p>Навън е: {carStatus.environment.day ? "светло" : "тъмно"}</p>
-        <p>Състояние на движение: {carStatus.ignition}</p>
-        <p>Състояние на зареждане: {carStatus.battery.charging_mode}</p>
-        <p></p>
-        <p>Обновено на {formatPosixTimestamp(carStatus.timestamp)}</p>
+        {carStatus !== undefined && (
+          <>
+            <p>
+              Батерия: {carStatus.battery.level}% (
+              {formatStringTimestamp(carStatus.battery.updated_at)})
+            </p>
+            <p>Прогноза: {carStatus.battery.autonomy} км</p>
+            <p>Километраж: {carStatus.odometer} км</p>
+            <p>Температура на въздуха: {carStatus.environment.air_temp}&deg;</p>
+            <p>Навън е: {carStatus.environment.day ? "светло" : "тъмно"}</p>
+            <p>Състояние на движение: {carStatus.ignition}</p>
+            {carStatus.battery.charging !== undefined &&
+              carStatus.battery.charging.plugged !== undefined && (
+                <>
+                  <p>
+                    Състояние на зареждане: {carStatus.battery.charging.status}
+                  </p>
+                  <p>
+                    Оставащо време:{" "}
+                    {formatDurationString(
+                      carStatus.battery.charging.remaining_time
+                    )}
+                  </p>
+                  <p>
+                    Скорост на зареждане: {carStatus.battery.charging.rate} км/ч
+                  </p>
+                  <p>Режим на зареждане: {carStatus.battery.charging.mode}</p>
+                </>
+              )}
+            <p>&nbsp;</p>
+            <p>Обновено на {formatPosixTimestamp(carStatus.timestamp)}</p>
+          </>
+        )}
         <p>
           {notifications && (
             <>
