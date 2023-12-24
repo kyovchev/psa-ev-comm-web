@@ -1,7 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   signInWithEmailAndPassword,
-  onAuthStateChanged,
   setPersistence,
   browserLocalPersistence,
 } from "firebase/auth";
@@ -11,7 +10,7 @@ import { useAppContext } from "@/context/AppState";
 import styles from "@/styles/Login.module.css";
 
 export default function Login() {
-  const { auth, setUser } = useAppContext();
+  const { auth } = useAppContext();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -27,21 +26,6 @@ export default function Login() {
         setError(e.message);
       });
   }
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setUser({
-          uid: user.uid,
-          email: user.email,
-        });
-      } else {
-        setUser(null);
-      }
-    });
-
-    return () => unsubscribe();
-  }, [auth, setUser]);
 
   return (
     <div className={styles.loginFormBackground}>
