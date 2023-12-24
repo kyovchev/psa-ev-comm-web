@@ -72,7 +72,9 @@ export default function CarStatus() {
   return (
     <div className={styles.carStatusContainerBackground}>
       <div className={styles.carStatusContainer}>
-        {carStatus !== null && (
+        {carStatus == null ? (
+          <p>Зареждане...</p>
+        ) : (
           <>
             <p>
               Батерия: {carStatus.battery.level}% (
