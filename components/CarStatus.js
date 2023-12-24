@@ -96,23 +96,31 @@ export default function CarStatus() {
               ({formatStringTimestamp(carStatus.position.updated_at)})
             </p>
             <p>Температура на въздуха: {carStatus.environment.air_temp}&deg;</p>
-            <p>Навън е: {carStatus.environment.day ? "светло" : "тъмно"}</p>
-            <p>Състояние на движение: {carStatus.ignition}</p>
-            {carStatus.battery.charging.plugged && (
+            {carStatus.battery.charging.plugged ? (
               <>
                 <p>
                   Състояние на зареждане: {carStatus.battery.charging.status}
                 </p>
-                <p>
-                  Оставащо време:{" "}
-                  {formatDurationString(
-                    carStatus.battery.charging.remaining_time
-                  )}
-                </p>
-                <p>
-                  Скорост на зареждане: {carStatus.battery.charging.rate} км/ч
-                </p>
+                {carStatus.battery.charging.status != "Stopped" && (
+                  <>
+                    <p>
+                      Оставащо време:{" > "}
+                      {formatDurationString(
+                        carStatus.battery.charging.remaining_time
+                      )}
+                    </p>
+                    <p>
+                      Скорост на зареждане: {carStatus.battery.charging.rate}{" "}
+                      км/ч
+                    </p>
+                  </>
+                )}
                 <p>Режим на зареждане: {carStatus.battery.charging.mode}</p>
+              </>
+            ) : (
+              <>
+                <p>Навън е: {carStatus.environment.day ? "светло" : "тъмно"}</p>
+                <p>Състояние на движение: {carStatus.ignition}</p>
               </>
             )}
             <p>&nbsp;</p>

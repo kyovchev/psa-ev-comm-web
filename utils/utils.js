@@ -16,5 +16,7 @@ export function formatStringTimestamp(timestamp) {
 
 export function formatDurationString(duration) {
   const dt = duration.substring(2, duration.length - 1).split("H");
-  return dt[0] + " часа и " + dt[1] + " минути";
+  if (dt[0] === undefined) return dt[1] + " минути";
+  else if (dt[1] === undefined) return dt[0] + " часа";
+  else return dt[0] + " часа и " + dt[1] + " минути";
 }
