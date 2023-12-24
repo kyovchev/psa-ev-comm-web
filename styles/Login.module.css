@@ -4,17 +4,18 @@
   left: 0;
   width: 100%;
   height: 100%;
-  overflow: hidden;
+  overflow-x: scroll;
+  overflow-y: auto;
   background-color: gray;
   z-index: 98;
 }
 
 .loginForm {
-  position: fixed;
-  top: calc(50% - 200px);
-  left: calc(50% - 150px);
-  width: 450px;
-  height: 300px;
+  position: relative;
+  top: 100px;
+  min-width: 400px;
+  max-width: 450px;
+  margin: 0 auto;
   z-index: 99;
   background-color: azure;
   border-radius: 10px;
