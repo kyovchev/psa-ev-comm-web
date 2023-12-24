@@ -37,7 +37,7 @@ export default function CarStatus() {
   async function subscribe() {
     if ("Notification" in window) {
       if (Notification.permission === "granted") {
-        setFcmToken(user.uid);
+        setFcmToken(user.email);
       } else if (Notification.permission !== "denied") {
         Notification.requestPermission().then((permission) => {
           if (permission === "granted") {

@@ -33,7 +33,7 @@ export default function Login() {
       if (user) {
         setUser({
           uid: user.uid,
-          username: "",
+          email: user.email,
         });
       } else {
         setUser(null);

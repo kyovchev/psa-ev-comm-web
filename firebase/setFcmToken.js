@@ -2,7 +2,7 @@ import { getMessaging, getToken } from "firebase/messaging";
 import { getFirestore, doc, setDoc } from "firebase/firestore";
 import firebase_app from "./config";
 
-export function setFcmToken(uid) {
+export function setFcmToken(email) {
   const database = getFirestore(firebase_app);
   const messaging = getMessaging(firebase_app);
   getToken(messaging, {
@@ -10,7 +10,7 @@ export function setFcmToken(uid) {
   })
     .then((currentToken) => {
       if (currentToken) {
-        setDoc(doc(database, "fcm", uid), {
+        setDoc(doc(database, "fcm", email), {
           token: currentToken,
         });
       }
